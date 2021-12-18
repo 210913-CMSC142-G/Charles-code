@@ -25,7 +25,7 @@ with smaller values
 
 
 
-### **How to solve?**
+## **How to solve?**
 Following are the two main steps to solve this problem:
 
 - Calculate the sum of the array. If the _sum_ is odd, there can no the two subsets with an equal sum, so return false.
@@ -49,7 +49,7 @@ The array cannot be partitioned into equal sum sets.
 
 
 
-### **Algorithms: Recursive**
+## **Algorithms: Recursive**
 
 The goal is to determine each possible combination of elements in the array and calculate its corresponding sum and check whether a subset that has a sum equal to _target_ exist.
 
@@ -65,71 +65,48 @@ The isSubsetSum problem can be divided into two subproblems
 If any of the above subproblems return true, then return true. 
 isSubsetSum (arr, n, sum/2) = isSubsetSum (arr, n-1, sum/2) ||
                               isSubsetSum (arr, n-1, sum/2 - arr[n-1])
-
+### **Algorithms: Recursive (Binary Tree Representation)**
 <img src = "images/recursive_example.PNG">
 
-#### **_How does this solve a Sudoku puzzle?_**
+**Time Complexity**: **O(2^n)**, In the worst case, this solution tries two possibilities (whether to include or exclude) for every element.
 
-- Starting from the top-left square of the grid, find an empty square and fill in this square with a number from 1 to 9.
-  - If the number adheres to the rules, then move on to the next empty square.
-  - If the number has a duplicate in its row, column, or 3x3 grid, then choose the next number from 1 to 9.
-  - If all choices from 1 to 9 were checked and contradicted, then go back to the previous square and fill in the next number from 1 to 9.
-- Repeat steps until the bottom-right square is reached. (Solution is found)
 
-### **STOCHASTIC SEARCH**
 
-_Stochastic Search_ is an optimization algorithm that incorporates randomness. This is implemented with _Beam Search Algorithm_ that examines a graph by extending the most "promising" node at each level.
+## **Algorithms: Dynamic Programming**
+The problem can be solved using dynamic programming when the sum of the elements is not too big (_sum_ not reaching 2^n values where _n_ is the number of elements in the array). We can create a 2D array part[][] of size ((sum/2) + 1)*(n+1). And we can construct the solution in a bottom-up manner such that every filled entry has the following property.
 
-#### **_How does this solve a Sudoku puzzle?_**
+```
+part[i][j] = true if a subset of {arr[0],arr[1],...arr[j-1]} has sum equal to _i_, otherwise false.
+```
 
-- Create a series of 10 candidate grids by randomly filling in the empty squares in the puzzle.
-- Check how many mistakes each board has.
-  - If number is zero, the puzzle is solved
-  - If there are mistakes, a set of 4 successors is generated from it by taking two squares in the same row (excluding squares from the original puzzle) and switching their labels
-    - Successors are added to the set of candidate grids which is then sorted by the number of mistakes and the 10 grids with the least mistakes are taken
-- The process is repeated with the new set of 10 grids until a solution is found.
 
-### **CONSTRAINT PROGRAMMING**
+### **Algorithms: Dynamic Programming (2x2 array representation)**
+<img src = "images/DP_example.PNG">
 
-A paradigm that identifies feasible solutions out of a set of candidates where the problem can be modeled in terms of arbitrary constraints.
 
-#### **_How does this solve a Sudoku puzzle?_**
+**Time Complexity**: **O(sum*n)**, Note that if we increase the sum up to 2^n, the time complexity becomes exponential.
 
-- Create a problem instance
-  - Add sudoku input and their indices as variables
-  - Add constraints to the problem
-    1. No two number in a row should be the same
-    2. No two numbers in a column should be the same
-    3. No two numbers in a 3x3 grid shold be the same
 
-## **Comparative Analysis**
-
-|                                      | Backtracking                                         | Stochastic Search                            | Constraint Programming                                  |
-| ------------------------------------ | ---------------------------------------------------- | -------------------------------------------- | ------------------------------------------------------- |
-| **Time Complexity**                  | Ο(N<sup>n<sup>2</sup></sup>)                         | O(b\*n<sup>2</sup>)                          | Ο(N<sup>n<sup>2</sup></sup>)                            |
-| **Method**                           | Depth-first search                                   | Breadth-first search                         | Depth-first search                                      |
-| **No. of Solutions _(if possible)_** | 1                                                    | 1 or none                                    | At least 1                                              |
-| **Advantage**                        | Would always find a solution if there is one         | Possibility of finding a solution right away | Finds all possible solutions                            |
-| **Disadvantage**                     | May spend a long time assuming a value that is wrong | Unreliable and problematic                   | Higher run time than backtracking if multiple solutions |
-
-## **Conclusion**
-
-The most common algorithm used in solving a Sudoku puzzle is the backtracking algorithm because it is comparatively easier to implement. It is also best used if there is only one solution, because it is the most stable and is faster than constraint programming in this regard. However, it is best to use constraint programming if you are trying to find multiple solutions. It is best to avoid the stochastic search because this is the most unreliable and unstable. Additionally, this has more lines of code than the previous two.
+## **Wrap up**
+#### **Recursion**
+ - Utilizes Brute Force Algorithm
+ - Takes a lot of calculation
+ - O(2^n) time complexity
+ - Inefficient
+#### **Dynamic Programming**
+ - Utilizes Multidimensional Array (Saves data)
+Lesser calculation relative to Recursion
+O(sum*n) time complexity
+Exponentially large sum relative to array produces:
+   -  Sum = 2^n
+   - Gives O(2^n * n) time complexity, same with recursion
 
 ## **References**
 
-- Overall code: https://fse.studenttheses.ub.rug.nl/22745/1/bMATH_2020_HoexumES.pdf.pdf
-- Backtracking: https://www.techwithtim.net/tutorials/python-programming/sudoku-solver-backtracking/
-- Stochastic Search: https://github.com/ananthamapod/Sudoku
-- Constraint Programming: https://gist.github.com/ksurya/3940679
-- GeeksForGeeks. (2017, July 16). Sudoku (Explanation) | Backtracking | Set 7 | GeeksforGeeks [Video]. YouTube. https://www.youtube.com/watch?v=l7f9-GNH1j8
-- Backtracking algorithm. Programiz. (n.d.). Retrieved from https://www.programiz.com/dsa/backtracking-algorithm.
-- Neumann, F., & Witt, C. (2010). Stochastic Search Algorithms. Natural Computing Series, 21–32. doi:10.1007/978-3-642-16544-3_3
-- Computerphile. (2020, February 13). Python Sudoku Solver - Computerphile [Video]. YouTube. https://www.youtube.com/watch?v=G_UYXzGuqvM
-- What is stochastic search. IGI Global. (n.d.). Retrieved from https://www.igi-global.com/dictionary/stationary-density-stochastic-search-processes/28313.
-- Introduction to beam search algorithm. GeeksforGeeks. (2021, July 18). Retrieved from https://www.geeksforgeeks.org/introduction-to-beam-search-algorithm/.
-- Google. (n.d.). Constraint optimization. Google. Retrieved from https://developers.google.com/optimization/cp.
-- Sudoku puzzles, constraint programming and graph theory. OpenSourc.ES. (n.d.). Retrieved from https://opensourc.es/blog/sudoku/.
-- Sudoku: Backtracking-7. GeeksforGeeks. (2021, July 22). Retrieved from https://www.geeksforgeeks.org/sudoku-backtracking-7/.
-- Sudoku solver. AfterAcademy. (n.d.). Retrieved from https://afteracademy.com/blog/sudoku-solver.
-- Define Beam Search. Javatpoint. (n.d.). Retrieved from https://www.javatpoint.com/define-beam-search.
+- Overall code: https://www.geeksforgeeks.org/partition-problem-dp-18/?
+
+
+- StableSort. (2020, March 11). Partition Problem - 2 subsets of equal sum, as closely as possible - tutorial and source code [Video]. YouTube. https://www.youtube.com/watch?v=7BynUy5ml0I&t=356s
+- Tech Dose. (2020, October 16). Partition equal subset sum | Equal sum partition | Dynamic Programming | Leetcode #416 [Video]. Youtube. https://www.youtube.com/watch?v=obhWqDfzwQQ&t=102s
+- Neet Code. (2021, May 20). Partition Equal Subset Sum - Dynamic Programming - Leetcode 416 - Python. [Video]. Youtube. https://www.youtube.com/watch?v=IsvocB5BJhw&t=341s
+- Partition Problem using Dynamic Programming – Techie Delight. Techie Delight. (n.d). Retrieved 14 December 2021, from https://www.techiedelight.com/partition-problem/.
